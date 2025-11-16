@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">👤 Meu Perfil</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Informações Pessoais</h5>
+                        <table class="table table-borderless">
+                            <tr>
+                                <th width="120">Usuário:</th>
+                                <td>{{ user.username }}</td>
+                            </tr>
+                            <tr>
+                                <th>Nome:</th>
+                                <td>{{ user.get_full_name|default:"Não informado" }}</td>
+                            </tr>
+                            <tr>
+                                <th>Email:</th>
+                                <td>{{ user.email|default:"Não informado" }}</td>
+                            </tr>
+                            <tr>
+                                <th>Matrícula:</th>
+                                <td>{{ professor.matricula|default:"A definir" }}</td>
+                            </tr>
+                            <tr>
+                                <th>Departamento:</th>
+                                <td>{{ professor.departamento|default:"A definir" }}</td>
+                            </tr>
+                            <tr>
+                                <th>Campus:</th>
+                                <td>{{ professor.campus|default:"A definir" }}</td>
+                            </tr>
+                            <tr>
+                                <th>Último login:</th>
+                                <td>{{ user.last_login|date:"d/m/Y H:i" }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Ações</h5>
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'home' %}" class="btn btn-outline-primary">
+                                🏠 Voltar para Home
+                            </a>
+                            <form method="post" action="{% url 'accounts:logout' %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger w-100">
+                                    🚪 Sair do Sistema
+                                </button>
+                            </form>
+                        </div>
+                        
+                        <div class="mt-4 p-3 bg-light rounded">
+                            <h6>Status do Sistema</h6>
+                            <p class="mb-1">✅ Login ativo</p>
+                            <p class="mb-1">✅ Sessão válida</p>
+                            <p class="mb-0">👤 Tipo: Professor</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="text-center">
+    <h1 class="display-4">IFPermutas</h1>
+    <p class="lead">Sistema de Permutas para Professores</p>
+    
+    {% if user.is_authenticated %}
+        <div class="alert alert-success">
+            <h4>✅ Login realizado com sucesso!</h4>
+            <p>Bem-vindo, <strong>{{ user.get_full_name|default:user.username }}</strong>!</p>
+        </div>
+        <div class="mt-4">
+            <a href="{% url 'accounts:profile' %}" class="btn btn-primary btn-lg">Ver Meu Perfil</a>
+            <a href="{% url 'accounts:logout' %}" class="btn btn-outline-secondary btn-lg">Sair</a>
+        </div>
+    {% else %}
+        <div class="mt-4">
+            <p>Faça login para acessar o sistema de permutas</p>
+            <a href="{% url 'accounts:login' %}" class="btn btn-primary btn-lg">Fazer Login</a>
+        </div>
+        
+        <div class="mt-4 p-3 bg-light rounded">
+            <h5>Usuário de Teste</h5>
+            <p class="mb-1"><strong>Usuário:</strong> professor</p>
+            <p class="mb-0"><strong>Senha:</strong> senha123</p>
+        </div>
+    {% endif %}
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">📚 Oferecer Aulas</h5>
+                <p class="card-text">Disponibilize suas aulas para permuta</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">🔍 Buscar Aulas</h5>
+                <p class="card-text">Encontre aulas compatíveis</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">🤝 Negociar</h5>
+                <p class="card-text">Negocie permutas diretamente</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

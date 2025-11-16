@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-4">
+        <div class="card mt-5">
+            <div class="card-header bg-primary text-white text-center">
+                <h4 class="mb-0">IFPermutas - Login</h4>
+            </div>
+            <div class="card-body">
+                {% if form.errors %}
+                <div class="alert alert-danger">
+                    Usuário ou senha incorretos. Tente novamente.
+                </div>
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="id_username" class="form-label">Usuário:</label>
+                        <input type="text" name="username" id="id_username" class="form-control" required autofocus>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_password" class="form-label">Senha:</label>
+                        <input type="password" name="password" id="id_password" class="form-control" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-100 mb-3">Entrar</button>
+                    
+                    <input type="hidden" name="next" value="{{ next }}">
+                </form>
+
+                {% if not user.is_authenticated %}
+                <div class="text-center">
+                    <small class="text-muted">
+                        <strong>Usuário de teste:</strong><br>
+                        Usuário: professor<br>
+                        Senha: senha123
+                    </small>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
