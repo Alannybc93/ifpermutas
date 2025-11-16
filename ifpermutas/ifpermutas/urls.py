@@ -1,11 +1,13 @@
 from django.contrib import admin
 from django.urls import path, include
-from django.views.generic import RedirectView
-from core.views import home
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('core.urls')),
     path('accounts/', include('accounts.urls')),
-    path('', home, name='home'),
-    path('favicon.ico', RedirectView.as_view(url='/static/favicon.ico')),
+    
+    # URLs de autenticação
+    path('login/', auth_views.LoginView.as_view(), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 ]

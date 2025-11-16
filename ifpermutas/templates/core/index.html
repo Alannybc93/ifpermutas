@@ -1,57 +1,113 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="text-center">
+<div class="text-center mb-5">
     <h1 class="display-4">IFPermutas</h1>
     <p class="lead">Sistema de Permutas para Professores</p>
     
     {% if user.is_authenticated %}
         <div class="alert alert-success">
-            <h4>✅ Login realizado com sucesso!</h4>
-            <p>Bem-vindo, <strong>{{ user.get_full_name|default:user.username }}</strong>!</p>
-        </div>
-        <div class="mt-4">
-            <a href="{% url 'accounts:profile' %}" class="btn btn-primary btn-lg">Ver Meu Perfil</a>
-            <a href="{% url 'accounts:logout' %}" class="btn btn-outline-secondary btn-lg">Sair</a>
-        </div>
-    {% else %}
-        <div class="mt-4">
-            <p>Faça login para acessar o sistema de permutas</p>
-            <a href="{% url 'accounts:login' %}" class="btn btn-primary btn-lg">Fazer Login</a>
-        </div>
-        
-        <div class="mt-4 p-3 bg-light rounded">
-            <h5>Usuário de Teste</h5>
-            <p class="mb-1"><strong>Usuário:</strong> professor</p>
-            <p class="mb-0"><strong>Senha:</strong> senha123</p>
+            <h4>👋 Bem-vindo, {{ user.get_full_name|default:user.username }}!</h4>
+            <p class="mb-0">Você tem <strong>{{ aulas_count }}</strong> aula(s) cadastrada(s)</p>
         </div>
     {% endif %}
 </div>
 
-<div class="row mt-5">
-    <div class="col-md-4">
-        <div class="card text-center">
+{% if user.is_authenticated %}
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">📚 Ações Rápidas</h5>
+            </div>
             <div class="card-body">
-                <h5 class="card-title">📚 Oferecer Aulas</h5>
-                <p class="card-text">Disponibilize suas aulas para permuta</p>
+                <div class="d-grid gap-2">
+                    <a href="{% url 'core:cadastrar_aula' %}" class="btn btn-success btn-lg">
+                        ➕ Cadastrar Nova Aula
+                    </a>
+                    <a href="{% url 'core:minhas_aulas' %}" class="btn btn-outline-primary">
+                        📖 Ver Minhas Aulas
+                    </a>
+                    <a href="{% url 'core:busca_avancada' %}" class="btn btn-outline-info">
+                        🔍 Busca Avançada
+                    </a>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="card text-center">
-            <div class="card-body">
-                <h5 class="card-title">🔍 Buscar Aulas</h5>
-                <p class="card-text">Encontre aulas compatíveis</p>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">ℹ️ Como Funciona</h5>
             </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card text-center">
             <div class="card-body">
-                <h5 class="card-title">🤝 Negociar</h5>
-                <p class="card-text">Negocie permutas diretamente</p>
+                <ol class="list-group list-group-numbered">
+                    <li class="list-group-item border-0">Cadastre aulas que deseja permutar</li>
+                    <li class="list-group-item border-0">Busque por aulas compatíveis</li>
+                    <li class="list-group-item border-0">Entre em contato com outros professores</li>
+                    <li class="list-group-item border-0">Realize a permuta</li>
+                </ol>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Seção de Aulas Disponíveis -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">📋 Aulas Disponíveis para Permuta</h5>
+            </div>
+            <div class="card-body">
+                {% if aulas_count > 0 %}
+                    <p>Explore aulas de outros professores disponíveis para permuta.</p>
+                    <a href="{% url 'core:lista_aulas' %}" class="btn btn-warning">
+                        👀 Ver Todas as Aulas Disponíveis
+                    </a>
+                {% else %}
+                    <p class="text-muted">Nenhuma aula disponível para permuta no momento.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+<!-- Página para usuários NÃO logados -->
+<div class="text-center mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body py-5">
+                    <h3 class="text-success mb-4">🔒 Acesso Restrito</h3>
+                    <p class="lead mb-4">Faça login para acessar o sistema de permutas</p>
+                    
+                    <a href="{% url 'login' %}" class="btn btn-primary btn-lg mb-4">
+                        🔑 Fazer Login
+                    </a>
+                    
+                    <div class="mt-4 p-4 bg-light rounded">
+                        <h5 class="text-info">👤 Usuário de Teste</h5>
+                        <div class="row justify-content-center">
+                            <div class="col-md-6 text-start">
+                                <p class="mb-2"><strong>👤 Usuário:</strong> professor</p>
+                                <p class="mb-0"><strong>🔒 Senha:</strong> senha123</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <h6 class="text-muted">📋 Sobre o Sistema</h6>
+                        <p class="text-muted small">
+                            Sistema desenvolvido para facilitar a permuta de aulas entre professores 
+                            do Instituto Federal. Cadastre suas aulas e encontre oportunidades de permuta.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
 {% endblock %}

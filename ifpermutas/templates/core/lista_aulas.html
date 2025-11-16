@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>🔍 Aulas Disponíveis para Permuta</h2>
+    <div>
+        <span class="badge bg-success">{{ aulas|length }} aula(s) encontrada(s)</span>
+    </div>
+</div>
+
+{% if aulas %}
+<div class="row">
+    {% for aula in aulas %}
+    <div class="col-md-6 mb-3">
+        <div class="card border-success">
+            <div class="card-header bg-success text-white d-flex justify-content-between">
+                <span>{{ aula.disciplina }}</span>
+                <span class="badge bg-light text-dark">{{ aula.get_tipo_display }}</span>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    <strong>👨‍🏫 Professor:</strong> {{ aula.professor.user.get_full_name|default:aula.professor.user.username }}<br>
+                    <strong>📅 Dia:</strong> {{ aula.get_dia_semana_display }}<br>
+                    <strong>⏰ Horário:</strong> {{ aula.horario }}<br>
+                    <strong>🏫 Campus:</strong> {{ aula.campus }}<br>
+                    {% if aula.turma %}
+                    <strong>👥 Turma:</strong> {{ aula.turma }}<br>
+                    {% endif %}
+                    {% if aula.observacoes %}
+                    <strong>📝 Observações:</strong> {{ aula.observacoes }}
+                    {% endif %}
+                </p>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-primary btn-sm" disabled>
+                        📞 Entrar em Contato
+                    </button>
+                    <span class="badge bg-warning text-dark">Em breve</span>
+                </div>
+            </div>
+            <div class="card-footer text-muted">
+                <small>Disponível desde: {{ aula.data_criacao|date:"d/m/Y" }}</small>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-warning text-center">
+    <h4>🔍 Nenhuma aula disponível no momento</h4>
+    <p>Volte mais tarde para ver novas ofertas de permuta.</p>
+</div>
+{% endif %}
+{% endblock %}

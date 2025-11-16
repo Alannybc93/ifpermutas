@@ -2,22 +2,22 @@
 
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-8">
+    <div class="col-md-10">
         <div class="card">
             <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">👤 Meu Perfil</h4>
+                <h4 class="mb-0">👤 Meu Perfil - Professor</h4>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <h5>Informações Pessoais</h5>
+                        <h5>📊 Informações Pessoais</h5>
                         <table class="table table-borderless">
                             <tr>
-                                <th width="120">Usuário:</th>
+                                <th width="140">Usuário:</th>
                                 <td>{{ user.username }}</td>
                             </tr>
                             <tr>
-                                <th>Nome:</th>
+                                <th>Nome Completo:</th>
                                 <td>{{ user.get_full_name|default:"Não informado" }}</td>
                             </tr>
                             <tr>
@@ -37,30 +37,46 @@
                                 <td>{{ professor.campus|default:"A definir" }}</td>
                             </tr>
                             <tr>
-                                <th>Último login:</th>
-                                <td>{{ user.last_login|date:"d/m/Y H:i" }}</td>
+                                <th>Telefone:</th>
+                                <td>{{ professor.telefone|default:"Não informado" }}</td>
                             </tr>
                         </table>
                     </div>
                     <div class="col-md-6">
-                        <h5>Ações</h5>
-                        <div class="d-grid gap-2">
-                            <a href="{% url 'home' %}" class="btn btn-outline-primary">
-                                🏠 Voltar para Home
-                            </a>
-                            <form method="post" action="{% url 'accounts:logout' %}" class="d-inline">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-outline-danger w-100">
-                                    🚪 Sair do Sistema
-                                </button>
-                            </form>
+                        <h5>📈 Estatísticas</h5>
+                        <div class="row text-center mb-4">
+                            <div class="col-6">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <h3 class="text-primary">{{ total_aulas }}</h3>
+                                        <small>Total de Aulas</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <h3 class="text-success">{{ aulas_ativas }}</h3>
+                                        <small>Aulas Ativas</small>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        
-                        <div class="mt-4 p-3 bg-light rounded">
-                            <h6>Status do Sistema</h6>
-                            <p class="mb-1">✅ Login ativo</p>
-                            <p class="mb-1">✅ Sessão válida</p>
-                            <p class="mb-0">👤 Tipo: Professor</p>
+
+                        <h5>🚀 Ações Rápidas</h5>
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'core:cadastrar_aula' %}" class="btn btn-success">
+                                ➕ Cadastrar Nova Aula
+                            </a>
+                            <a href="{% url 'core:minhas_aulas' %}" class="btn btn-outline-primary">
+                                📖 Ver Minhas Aulas
+                            </a>
+                            <a href="{% url 'core:lista_aulas' %}" class="btn btn-outline-info">
+                                🔍 Buscar Aulas
+                            </a>
+                            <a href="{% url 'accounts:logout' %}" class="btn btn-outline-danger">
+                                🚪 Sair do Sistema
+                            </a>
                         </div>
                     </div>
                 </div>

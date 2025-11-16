@@ -21,7 +21,6 @@ INSTALLED_APPS = [
     'accounts',
 ]
 
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -82,12 +81,25 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/accounts/login/'
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Configurações de Login/Logout
+# =============================================================================
+# CONFIGURAÇÕES DE AUTENTICAÇÃO CORRIGIDAS
+# =============================================================================
+
+# URL para redirecionar após login bem-sucedido
 LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/accounts/login/'  # Ou mude para '/logout/success/' se quiser página customizada
-LOGIN_URL = '/accounts/login/'
+
+# URL para redirecionar após logout
+LOGOUT_REDIRECT_URL = '/'
+
+# URL da página de login
+LOGIN_URL = 'login'
+
+# =============================================================================
+# CONFIGURAÇÕES DE SEGURANÇA (Para produção, mude estas)
+# =============================================================================
+
+# Em produção, mude para:
+# DEBUG = False
+# ALLOWED_HOSTS = ['seu-dominio.com', 'www.seu-dominio.com']
