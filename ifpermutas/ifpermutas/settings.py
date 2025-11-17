@@ -6,7 +6,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'sua-chave-secreta-aqui'
+SECRET_KEY = 'django-insecure-sua-chave-secreta-aqui-mude-em-producao'
 DEBUG = True
 ALLOWED_HOSTS = []
 
@@ -32,6 +32,10 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'ifpermutas.urls'
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = '/login/'
 
 TEMPLATES = [
     {
@@ -83,23 +87,14 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# =============================================================================
-# CONFIGURAÇÕES DE AUTENTICAÇÃO CORRIGIDAS
-# =============================================================================
+# Configurações de Autenticação
+LOGIN_REDIRECT_URL = '/'  # Para onde ir após login bem-sucedido
+LOGOUT_REDIRECT_URL = '/'  # Para onde ir após logout
+LOGIN_URL = '/login/'  # URL para redirecionar usuários não autenticados
 
-# URL para redirecionar após login bem-sucedido
-LOGIN_REDIRECT_URL = '/'
+# Configurações de Email (para produção)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-# URL para redirecionar após logout
-LOGOUT_REDIRECT_URL = '/'
-
-# URL da página de login
-LOGIN_URL = 'login'
-
-# =============================================================================
-# CONFIGURAÇÕES DE SEGURANÇA (Para produção, mude estas)
-# =============================================================================
-
-# Em produção, mude para:
-# DEBUG = False
-# ALLOWED_HOSTS = ['seu-dominio.com', 'www.seu-dominio.com']
+# Configurações de Sessão
+SESSION_COOKIE_AGE = 1209600  # 2 semanas
+SESSION_SAVE_EVERY_REQUEST = True

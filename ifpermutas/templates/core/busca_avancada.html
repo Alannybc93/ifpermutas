@@ -1,80 +1,94 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-4">
-        <div class="card mb-4">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">🔍 Filtros de Busca</h5>
-            </div>
-            <div class="card-body">
-                <form method="get">
-                    {% for field in form %}
-                    <div class="mb-3">
-                        <label class="form-label">{{ field.label }}</label>
-                        {{ field }}
-                    </div>
-                    {% endfor %}
-                    
-                    <button type="submit" class="btn btn-success w-100">
-                        🔎 Aplicar Filtros
-                    </button>
-                    <a href="{% url 'core:busca_avancada' %}" class="btn btn-outline-secondary w-100 mt-2">
-                        🗑️ Limpar Filtros
-                    </a>
-                </form>
-            </div>
+<div class="container">
+    <h2 class="mb-4">🔍 Busca Avançada de Aulas</h2>
+
+    <div class="card mb-4">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0">🎯 Filtros de Busca</h5>
         </div>
-    </div>
-    
-    <div class="col-md-8">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4>🎯 Resultados da Busca</h4>
-            <span class="badge bg-success">{{ resultados_count }} aula(s) encontrada(s)</span>
-        </div>
-        
-        {% if aulas %}
-        <div class="row">
-            {% for aula in aulas %}
-            <div class="col-12 mb-3">
-                <div class="card border-success">
-                    <div class="card-header bg-success text-white d-flex justify-content-between">
-                        <span>{{ aula.disciplina }}</span>
-                        <div>
-                            <span class="badge bg-light text-dark">{{ aula.get_turno_display }}</span>
-                            <span class="badge bg-warning">{{ aula.get_dia_semana_display }}</span>
+        <div class="card-body">
+            <form method="get">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label class="form-label">Disciplina</label>
+                            {{ form.disciplina }}
                         </div>
                     </div>
-                    <div class="card-body">
-                        <p class="card-text">
-                            <strong>👨‍🏫 Professor:</strong> {{ aula.professor.user.get_full_name }}<br>
-                            <strong>🏫 Campus:</strong> {{ aula.campus }}<br>
-                            <strong>⏰ Horário:</strong> {{ aula.horario }}<br>
-                            <strong>📅 Turno:</strong> {{ aula.get_turno_display }}<br>
-                            {% if aula.observacoes %}
-                            <strong>📝 Observações:</strong> {{ aula.observacoes }}
-                            {% endif %}
-                        </p>
-                        <button class="btn btn-primary btn-sm" onclick="mostrarContato('{{ aula.professor.user.email }}')">
-                            📞 Entrar em Contato
-                        </button>
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label class="form-label">Campus</label>
+                            {{ form.campus }}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label class="form-label">Dia da Semana</label>
+                            {{ form.dia_semana }}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label class="form-label">Turno</label>
+                            {{ form.turno }}
+                        </div>
                     </div>
                 </div>
-            </div>
-            {% endfor %}
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a href="{% url 'core:busca_avancada' %}" class="btn btn-secondary me-md-2">🔄 Limpar</a>
+                    <button type="submit" class="btn btn-primary">🔍 Buscar</button>
+                </div>
+            </form>
         </div>
-        {% else %}
-        <div class="alert alert-warning text-center">
-            <h5>🔍 Nenhuma aula encontrada</h5>
-            <p>Tente ajustar os filtros da busca.</p>
-        </div>
-        {% endif %}
     </div>
-</div>
 
-<script>
-function mostrarContato(email) {
-    alert('📧 Entre em contato com o professor via: ' + email + '\n\nSistema de mensagens interno em breve!');
-}
-</script>
+    {% if form.is_bound %}
+    <div class="card">
+        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">📚 Resultados da Busca</h5>
+            <span class="badge bg-light text-dark fs-6">{{ resultados_count }} aula(s) encontrada(s)</span>
+        </div>
+        <div class="card-body">
+            {% if aulas %}
+                <div class="row">
+                    {% for aula in aulas %}
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-header bg-success text-white">
+                                <h6 class="mb-0">{{ aula.get_disciplina_display }}</h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text small">
+                                    <strong>👨‍🏫 Professor:</strong> {{ aula.professor.user.get_full_name }}<br>
+                                    <strong>🏫 Campus:</strong> {{ aula.campus }}<br>
+                                    <strong>📅 Dia:</strong> {{ aula.get_dia_semana_display }}<br>
+                                    <strong>⏰ Turno:</strong> {{ aula.get_turno_display }}<br>
+                                    <strong>⏱️ Carga Horária:</strong> {{ aula.carga_horaria }}h/semana
+                                </p>
+                            </div>
+                            <div class="card-footer">
+                                <div class="d-grid">
+                                    <a href="{% url 'core:enviar_proposta' aula.id %}" class="btn btn-primary btn-sm">
+                                        📨 Enviar Proposta
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-4">
+                    <div class="alert alert-warning">
+                        <h5>🔍 Nenhuma aula encontrada</h5>
+                        <p class="mb-0">Tente ajustar os filtros de busca ou <a href="{% url 'core:lista_aulas' %}">ver todas as aulas disponíveis</a>.</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
 {% endblock %}

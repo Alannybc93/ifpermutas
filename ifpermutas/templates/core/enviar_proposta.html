@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">📨 Enviar Proposta de Permuta</h4>
+                </div>
+                <div class="card-body">
+                    <!-- Informações da Aula Destino -->
+                    <div class="alert alert-info">
+                        <h5>📚 Aula para Permuta</h5>
+                        <p class="mb-1"><strong>Disciplina:</strong> {{ aula_destino.get_disciplina_display }}</p>
+                        <p class="mb-1"><strong>Professor:</strong> {{ aula_destino.professor.user.get_full_name }}</p>
+                        <p class="mb-1"><strong>Campus:</strong> {{ aula_destino.campus }}</p>
+                        <p class="mb-1"><strong>Dia:</strong> {{ aula_destino.get_dia_semana_display }}</p>
+                        <p class="mb-0"><strong>Turno:</strong> {{ aula_destino.get_turno_display }}</p>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <!-- Seleção da Aula para Oferecer -->
+                        <div class="mb-3">
+                            <label class="form-label"><strong>🎯 Selecione sua aula para permuta:</strong></label>
+                            {% if aulas_origem %}
+                                <select name="aula_origem_id" class="form-select" required>
+                                    <option value="">-- Selecione uma aula --</option>
+                                    {% for aula in aulas_origem %}
+                                        <option value="{{ aula.id }}">
+                                            {{ aula.get_disciplina_display }} - {{ aula.campus }} - {{ aula.get_dia_semana_display }} - {{ aula.get_turno_display }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                <div class="form-text">Escolha uma das suas aulas disponíveis para permuta</div>
+                            {% else %}
+                                <div class="alert alert-warning">
+                                    ❌ Você não tem aulas disponíveis para permuta. 
+                                    <a href="{% url 'core:cadastrar_aula' %}" class="alert-link">Cadastre uma aula primeiro</a>.
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Mensagem Personalizada -->
+                        <div class="mb-3">
+                            <label class="form-label"><strong>💌 Mensagem para o professor:</strong></label>
+                            <textarea name="mensagem" class="form-control" rows="4" 
+                                      placeholder="Escreva uma mensagem personalizada para o professor..."></textarea>
+                            <div class="form-text">Esta mensagem será enviada junto com sua proposta</div>
+                        </div>
+
+                        <!-- Botões -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'core:lista_aulas' %}" class="btn btn-secondary me-md-2">← Voltar</a>
+                            {% if aulas_origem %}
+                                <button type="submit" class="btn btn-success">📨 Enviar Proposta</button>
+                            {% else %}
+                                <button type="button" class="btn btn-success" disabled>📨 Enviar Proposta</button>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

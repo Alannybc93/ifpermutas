@@ -31,6 +31,9 @@
                     <a href="{% url 'core:busca_avancada' %}" class="btn btn-outline-info">
                         🔍 Busca Avançada
                     </a>
+                    <a href="{% url 'core:lista_aulas' %}" class="btn btn-outline-warning">
+                        👀 Ver Aulas Disponíveis
+                    </a>
                 </div>
             </div>
         </div>
@@ -44,30 +47,38 @@
                 <ol class="list-group list-group-numbered">
                     <li class="list-group-item border-0">Cadastre aulas que deseja permutar</li>
                     <li class="list-group-item border-0">Busque por aulas compatíveis</li>
-                    <li class="list-group-item border-0">Entre em contato com outros professores</li>
-                    <li class="list-group-item border-0">Realize a permuta</li>
+                    <li class="list-group-item border-0">Envie propostas de permuta</li>
+                    <li class="list-group-item border-0">Aceite ou recuse propostas recebidas</li>
+                    <li class="list-group-item border-0">Realize a permuta combinada</li>
                 </ol>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Seção de Aulas Disponíveis -->
+<!-- Seção de Status -->
 <div class="row mt-4">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header bg-warning text-dark">
-                <h5 class="mb-0">📋 Aulas Disponíveis para Permuta</h5>
+    <div class="col-md-4">
+        <div class="card text-white bg-info">
+            <div class="card-body text-center">
+                <h4>{{ user.professor.aula_set.count }}</h4>
+                <p class="mb-0">Aulas Cadastradas</p>
             </div>
-            <div class="card-body">
-                {% if aulas_count > 0 %}
-                    <p>Explore aulas de outros professores disponíveis para permuta.</p>
-                    <a href="{% url 'core:lista_aulas' %}" class="btn btn-warning">
-                        👀 Ver Todas as Aulas Disponíveis
-                    </a>
-                {% else %}
-                    <p class="text-muted">Nenhuma aula disponível para permuta no momento.</p>
-                {% endif %}
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-warning">
+            <div class="card-body text-center">
+                <h4>{{ user.professor.propostas_recebidas.count }}</h4>
+                <p class="mb-0">Propostas Recebidas</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-success">
+            <div class="card-body text-center">
+                <h4>{{ user.professor.propostas_feitas.count }}</h4>
+                <p class="mb-0">Propostas Enviadas</p>
             </div>
         </div>
     </div>

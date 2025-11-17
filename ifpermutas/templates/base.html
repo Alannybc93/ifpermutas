@@ -3,56 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IFPermutas</title>
+    <title>{% block title %}IFPermutas{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .navbar-brand {
+            font-size: 1.5rem;
+        }
+        .logout-btn {
+            background: none;
+            border: none;
+            color: #ffcccb !important;
+            cursor: pointer;
+            padding: 8px 0;
+        }
+        .logout-btn:hover {
+            color: #ff9999 !important;
+        }
+        .footer {
+            background: linear-gradient(135deg, #008000 0%, #006400 100%);
+            color: white;
+            margin-top: auto;
+        }
+        .main-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .content-wrap {
+            flex: 1;
+        }
+        .notification-badge {
+            font-size: 0.7rem;
+            position: relative;
+            top: -2px;
+        }
+    </style>
 </head>
 <body>
-    {% if user.is_authenticated %}
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(135deg, #008000 0%, #006400 100%);">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="{% url 'core:home' %}">
-                🎓 IFPermutas
-            </a>
-            
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <div class="navbar-nav ms-auto">
-                    <span class="navbar-text me-3">
-                        👋 Olá, <strong>{{ user.get_full_name|default:user.username }}</strong>
-                    </span>
-                    <a class="nav-link" href="{% url 'accounts:profile' %}">
-                        👤 Meu Perfil
-                    </a>
-                    <a class="nav-link" href="{% url 'core:busca_avancada' %}">
-                        🔍 Busca Avançada
-                    </a>
-                    <!-- LOGOUT SIMPLES COM GET -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'accounts:logout' %}" style="color: #ffcccb;">
-                            🚪 Sair
-                        </a>
-                    </li>
+    <div class="main-container">
+        <!-- NAVBAR -->
+        {% if user.is_authenticated %}
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(135deg, #008000 0%, #006400 100%);">
+            <div class="container">
+                <a class="navbar-brand fw-bold" href="{% url 'core:home' %}">
+                    🎓 IFPermutas
+                </a>
+                
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <span class="navbar-text me-3">
+                                👋 Olá, <strong>{{ user.get_full_name|default:user.username }}</strong>
+                            </span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'accounts:profile' %}">
+                                👤 Meu Perfil
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'core:busca_avancada' %}">
+                                🔍 Busca Avançada
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'core:notificacoes' %}">
+                                🔔 Notificações
+                                {% if user.is_authenticated and user.professor.notificacoes.count > 0 %}
+                                    <span class="badge bg-danger notification-badge">{{ user.professor.notificacoes.count }}</span>
+                                {% endif %}
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="propostasDropdown" role="button" data-bs-toggle="dropdown">
+                                📨 Propostas
+                                {% if user.is_authenticated and user.professor.propostas_recebidas.count > 0 %}
+                                    <span class="badge bg-warning notification-badge">{{ user.professor.propostas_recebidas.count }}</span>
+                                {% endif %}
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'core:propostas_recebidas' %}">
+                                        📥 Recebidas
+                                        {% if user.is_authenticated and user.professor.propostas_recebidas.count > 0 %}
+                                            <span class="badge bg-warning float-end">{{ user.professor.propostas_recebidas.count }}</span>
+                                        {% endif %}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'core:propostas_enviadas' %}">
+                                        📤 Enviadas
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <!-- LOGOUT CORRIGIDO -->
+                        <li class="nav-item">
+                            <form method="post" action="{% url 'logout' %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="nav-link logout-btn">
+                                    🚪 Sair
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
                 </div>
             </div>
-        </div>
-    </nav>
-    {% endif %}
-
-    <div class="{% if not user.is_authenticated %}container-fluid p-0{% else %}container mt-4{% endif %}">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            {% endfor %}
+        </nav>
         {% endif %}
 
-        {% block content %}
-        {% endblock %}
+        <!-- CONTEÚDO PRINCIPAL -->
+        <div class="content-wrap">
+            <div class="{% if not user.is_authenticated %}container-fluid p-0{% else %}container mt-4{% endif %}">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show mx-2 mt-2">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+
+        <!-- RODAPÉ -->
+        <footer class="footer mt-5 py-4">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h5>🎓 IFPermutas</h5>
+                        <p class="mb-2">Sistema de Permutas para Professores</p>
+                        <p class="small mb-0 text-white-50">Facilitando a troca de aulas entre educadores</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>🔗 Navegação</h6>
+                        <ul class="list-unstyled">
+                            {% if user.is_authenticated %}
+                                <li><a href="{% url 'core:home' %}" class="text-white-50">🏠 Home</a></li>
+                                <li><a href="{% url 'core:minhas_aulas' %}" class="text-white-50">📖 Minhas Aulas</a></li>
+                                <li><a href="{% url 'core:lista_aulas' %}" class="text-white-50">👀 Aulas Disponíveis</a></li>
+                                <li><a href="{% url 'core:busca_avancada' %}" class="text-white-50">🔍 Busca Avançada</a></li>
+                                <li><a href="{% url 'core:notificacoes' %}" class="text-white-50">🔔 Notificações</a></li>
+                            {% else %}
+                                <li><a href="{% url 'login' %}" class="text-white-50">🔑 Login</a></li>
+                                <li><a href="{% url 'core:home' %}" class="text-white-50">🏠 Home</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>📞 Suporte</h6>
+                        <ul class="list-unstyled">
+                            <li class="text-white-50">📧 suporte@ifpermutas.com</li>
+                            <li class="text-white-50">📱 (11) 99999-9999</li>
+                            <li class="text-white-50">🕒 Segunda a Sexta: 8h às 18h</li>
+                            <li class="text-white-50">📍 Instituto Federal</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <hr class="my-4" style="border-color: rgba(255,255,255,0.1);">
+                
+                <div class="row">
+                    <div class="col-md-8">
+                        <h6>💡 Sobre o Sistema</h6>
+                        <p class="small text-white-50 mb-0">
+                            O IFPermutas é uma plataforma desenvolvida para facilitar a permuta de aulas entre professores 
+                            do Instituto Federal. Promovendo a flexibilidade e otimização da alocação de recursos educacionais.
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-md-end">
+                        <h6>⚡ Estatísticas</h6>
+                        <p class="small text-white-50 mb-0">
+                            {% if user.is_authenticated %}
+                                <strong>{{ user.professor.aula_set.count }}</strong> aulas cadastradas<br>
+                                <strong>{{ user.professor.propostas_feitas.count }}</strong> propostas enviadas
+                            {% else %}
+                                Junte-se a nossa comunidade!
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                
+                <hr class="my-3" style="border-color: rgba(255,255,255,0.1);">
+                
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <p class="mb-0 small text-white-50">
+                            &copy; 2025 IFPermutas. Todos os direitos reservados.
+                        </p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <p class="mb-0 small text-white-50">
+                            Desenvolvido com ❤️ para a comunidade educacional
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </footer>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
